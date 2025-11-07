@@ -1,0 +1,180 @@
+Connections: 
+DHT 11 sensor to Arduino board: 
+Gnd to gnd 
+Vcc to 5V 
+Out to pin 2 
+LED1 to Arduino board: 
+Gnd to gnd 
++ve leg to pin 5 
+LED2 to Arduino board: 
+Gnd to gnd 
++ve leg to pin 6 
+ 
+ 
+34 
+ 
+LED3 to Arduino board: 
+Gnd to gnd 
++ve leg to pin 7 
+Buzzer to Arduino board: 
++ve pin to pin 8 -ve pin to gnd
+
+
+
+
+Code: 
+// REQUIRES the following Arduino libraries: 
+// - DHT Sensor Library: https://github.com/adafruit/DHT-sensor-library 
+// - Adafruit Unified Sensor Lib: https://github.com/adafruit/Adafruit_Sensor 
+#include <Wire.h>  
+#include "DHT.h" 
+#define DHTPIN 2     // Digital pin connected to the DHT sensor 
+#define DHTTYPE DHT11   // DHT 11 
+DHT dht(DHTPIN, DHTTYPE); 
+const int buzzer = 8; 
+const int light = 7; 
+const int light1 = 6; 
+const int light2 = 5; 
+void setup() { 
+  Serial.begin(9600);  
+  pinMode(buzzer, OUTPUT);  
+  pinMode(light, OUTPUT); 
+  pinMode(light1, OUTPUT); 
+  pinMode(light2, OUTPUT); 
+  Serial.println("Annamalai University BE CSE 2021 "); // print some text in 
+Serial Monitor 
+  Serial.println("Tempearture & Humidity Reading Program"); 
+  Serial.println(F("DHT11 test!")); 
+  dht.begin(); 
+} 
+ 
+void loop() { 
+  digitalWrite(light, LOW); 
+  // Wait a few seconds between measurements. 
+  delay(2000); 
+  // Reading temperature or humidity takes about 250 milliseconds! 
+  // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor) 
+  float h = dht.readHumidity(); // Read temperature as Celsius (the default) 
+  float t = dht.readTemperature(); // Read temperature as Fahrenheit 
+(isFahrenheit = true) 
+  float f = dht.readTemperature(true); // Check if any reads failed and exit early 
+(to try again). 
+  if (isnan(h) || isnan(t) || isnan(f)) { 
+    Serial.println(F("Failed to read from DHT sensor!")); 
+    digitalWrite(light, HIGH); 
+    return;  } 
+  float hif = dht.computeHeatIndex(f, h); // Compute heat index in Fahrenheit 
+(the default) 
+  float hic = dht.computeHeatIndex(t, h, false);  // Compute heat index in Celsius 
+(isFahreheit = false) 
+  Serial.print(F(" Humidity: ")); 
+  Serial.print(h); 
+  Serial.print(F("% Temperature: ")); 
+  Serial.print(t); 
+  Serial.print(F("C ")); 
+  Serial.print(f); 
+  Serial.print(F("F  Heat index: "));
+Serial.print(hic); 
+  Serial.print(F("C ")); 
+  Serial.print(hif); 
+  Serial.println(F("F")); 
+  if (t>29) 
+  { tone(buzzer, 1000); // Send 1KHz sound signal... 
+    delay(1000);        // ...for 1 sec 
+    digitalWrite(light1, HIGH); 
+    digitalWrite(light2, LOW); 
+    tone(buzzer, 500); 
+    noTone(buzzer);     // Stop sound...  
+    Serial.println("Alert: HIGH Temperture");  } 
+  else{ 
+    Serial.println("Alert: Low Temperture");  
+    digitalWrite(light2, HIGH); 
+    } 
+  delay(2000); 
+  digitalWrite(light1,LOW); 
+} 
+
+
+
+
+
+CONNECTIONS: 
+➢ DHT11 Sensor to Arduino: 
+• VCC to 5V 
+• GND to GND 
+• Data to pin 12 
+➢ Error LED to Arduino: 
+• Negative to GND 
+• Positive to pin 9 and 220Ω Resistor 
+➢ High Temp LED to Arduino: 
+• Negative to GND 
+• Positive to pin 10 and 220Ω Resistor 
+➢ Normal LED to Arduino: 
+• Negative to GND 
+• Positive to pin 11 and 220Ω Resistor 
+➢ Buzzer to Arduino: 
+• Negative to GND 
+• Positive to pin 8 
+PROGRAM: 
+#include "DHT.h" 
+#define DHTPIN 12 
+#define DHTTYPE DHT11 
+[13] 
+DHT dht(DHTPIN, DHTTYPE); 
+const int buzzer = 8; 
+const int ledError = 9; 
+const int ledHighTemp = 10; 
+const int ledNormal = 11; 
+void setup() { 
+Serial.begin(9600); 
+dht.begin(); 
+pinMode(buzzer, OUTPUT); 
+pinMode(ledError, OUTPUT); 
+pinMode(ledHighTemp, OUTPUT); 
+pinMode(ledNormal, OUTPUT); 
+Serial.println("Climate Monitoring Ready"); 
+} 
+void loop() { 
+digitalWrite(ledError, LOW); 
+digitalWrite(ledHighTemp, LOW); 
+digitalWrite(ledNormal, LOW); 
+noTone(buzzer); 
+delay(2000); 
+float h = dht.readHumidity(); 
+float t = dht.readTemperature(); 
+if (isnan(h) || isnan(t)) { 
+Serial.println("Sensor Error!"); 
+digitalWrite(ledError, HIGH); 
+delay(1000); 
+return; 
+} 
+Serial.print("Humidity: "); Serial.print(h); 
+Serial.print("% Temp: "); Serial.print(t); Serial.println("°C"); 
+if (t > 29) { 
+Serial.println("HIGH TEMP ALERT!"); 
+digitalWrite(ledHighTemp, HIGH); 
+tone(buzzer, 1000); 
+delay(500); 
+noTone(buzzer); 
+} else { 
+Serial.println("Normal Climate"); 
+digitalWrite(ledNormal, HIGH); 
+} 
+delay(1000); 
+} 
+[14] 
+OUTPUT: 
+Climate Monitoring Ready 
+Humidity: 45% Temp: 28.00°C 
+Normal Climate 
+Humidity: 45% Temp: 28.00°C 
+Normal Climate 
+Humidity: 45% Temp: 28.00°C 
+Normal Climate 
+Humidity: 50% Temp: 31.00°C 
+HIGH TEMP ALERT! 
+Humidity: 50% Temp: 31.00°C 
+HIGH TEMP ALERT! 
+Humidity: 50% Temp: 31.00°C 
+HIGH TEMP ALERT!
+ 
