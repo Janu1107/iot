@@ -1,0 +1,34 @@
+CONNECTIONS: 
+➢ Sound Sensor to Raspberry Pi: 
+• VCC to Pin 2 (5V) 
+• DATA to Pin 11 (GPIO 17) 
+• GND to Pin 20 GND 
+➢ Red LED to Arduino: 
+• Negative to GND 
+• Positive to Pin 5 (GPIO 3) 
+PROGRAM: 
+from time import sleep 
+import RPi.GPIO as GPIO 
+GPIO.setwarnings(False) 
+GPIO.setmode(GPIO.BOARD) 
+SOUND_PIN = 11 
+LED_PIN = 3 
+GPIO.setup(SOUND_PIN, GPIO.IN) 
+GPIO.setup(LED_PIN, GPIO.OUT) 
+[39] 
+print("Sound sensor test is running...") 
+while True: 
+if GPIO.input(SOUND_PIN) == True: 
+GPIO.output(LED_PIN, False) 
+print("No sound detected") 
+else: 
+GPIO.output(LED_PIN, True) 
+print("Sound detected!") 
+sleep(1) 
+OUTPUT: 
+Sound sensor test is running... 
+No sound detected 
+No sound detected 
+Sound detected! 
+Sound detected! 
+No sound detected
