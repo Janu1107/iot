@@ -1,0 +1,30 @@
+CONNECTIONS: 
+➢ PIR sensor to Raspberry Pi: 
+• VCC (Pin 1)  to Pin 4 (5V) 
+• DATA (Pin 2) to Pin 11 (GPIO 17) 
+• GND (Pin 4)  to Pin 14 GND 
+PROGRAM: 
+import time 
+import RPi.GPIO as GPIO 
+PIR_pin = 17 
+GPIO.setwarnings(False) 
+GPIO.setmode(GPIO.BCM) 
+GPIO.setup(PIR_pin, GPIO.IN) 
+print("Motion Detection Started") 
+try: 
+while True: 
+if GPIO.input(PIR_pin): 
+print("Motion detected!") 
+else:  # If no motion (LOW signal) 
+print("No motion detected.") 
+time.sleep(1) 
+except KeyboardInterrupt: 
+print("Program interrupted by user.") 
+finally: 
+GPIO.cleanup() 
+OUTPUT: 
+Motion Detection Started 
+No motion detected. 
+Motion detected! 
+Motion detected! 
+No motion detected.
